@@ -1,0 +1,18 @@
+{
+    "name": "Huntag.TalentTreeFeature.Editor",
+    "rootNamespace": "Huntag.TalentTreeFeature.Editor",
+    "references": [
+        "GUID:30b43cbc6cd86fc44a42e777cc8e1f89"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
