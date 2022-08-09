@@ -1,11 +1,15 @@
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 
-public class TalentGraphView : GraphView
+namespace Huntag.TalentTreeFeature.Editor
 {
-    [MenuItem("Huntag/RPG/Talent Tree Editor")]
-    public static void Open()
-    {
 
+    public class TalentGraphView : GraphView
+    {
+        [MenuItem("Huntag/RPG/Talent Tree Editor")]
+        public static void Open()
+        {
+
+        }
     }
 }

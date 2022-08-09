@@ -1,4 +1,5 @@
 using UnityEngine;
+using Huntag.TalentTreeFeature;
 
 public class Player : MonoBehaviour
 {
@@ -11,5 +12,5 @@ public class Player : MonoBehaviour
     }
 
     [SerializeField]
-    private TalentTree _talentTree;
+    private TalentTreeModel _talentTree;
 }
