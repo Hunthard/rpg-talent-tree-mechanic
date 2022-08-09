@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Huntag.TalentTreeFeature
 {
-    [Serializable]
     public class Talent
     {
         public class TalentEventArgs : EventArgs
@@ -70,6 +69,27 @@ namespace Huntag.TalentTreeFeature
             {
                 _linkedTalents.Remove(talent);
             }
+        }
+
+        public void Lock() => Status = State.Locked;
+        public void Unlock() => Status = State.Unlocked;
+        public void Investigate() => Status = State.Investigated;
+
+        public void CheckStatus()
+        {
+            if (Status == State.Investigated) return;
+            
+            var available = false;
+
+            foreach (var talent in _linkedTalents)
+            {
+                available |= talent.Status == State.Investigated;
+            }
+
+            if (available)
+                Unlock();
+            else
+                Lock();
         }
     }
 }

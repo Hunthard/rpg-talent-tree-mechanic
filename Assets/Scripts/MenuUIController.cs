@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuUIController : MonoBehaviour
 {
-    public List<Canvas> Menu;
+    public List<GameObject> Menu;
 
     private int _currentUIIndex = 0;
 
@@ -16,7 +16,7 @@ public class MenuUIController : MonoBehaviour
     public void SelectUI(int index)
     {
         DisableAllMenu();
-        Menu[index].enabled = true;
+        Menu[index].SetActive(true);
         _currentUIIndex = index;
     }
 
@@ -24,7 +24,7 @@ public class MenuUIController : MonoBehaviour
     {
         foreach (var ui in Menu)
         {
-            ui.enabled = false;
+            ui.SetActive(false);
         }
     }
 }

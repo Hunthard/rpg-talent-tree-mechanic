@@ -8,7 +8,22 @@ namespace Huntag.TalentTreeFeature
 {
     public class TalentButton : Graphic, IPointerClickHandler
     {
-        public event EventHandler Clicked = delegate { };
+        public class TalentButtonEventArgs : EventArgs
+        {
+            public Image Icon;
+            public Talent Talent;
+
+            public TalentButtonEventArgs() : base()
+            { }
+
+            public TalentButtonEventArgs(Image icon, Talent talent) : this()
+            {
+                Icon = icon;
+                Talent = talent;
+            }
+        }
+        
+        public event EventHandler<TalentButtonEventArgs> Clicked = delegate { };
 
         [SerializeField]
         private Image _icon;
@@ -18,12 +33,13 @@ namespace Huntag.TalentTreeFeature
         private TMP_Text _name;
         public TMP_Text Name => _name;
 
+        public Talent Talent { get; set; }
+
         #region Public Methods
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Clicked(this, new EventArgs());
-            Debug.Log(_name.text);
+            Clicked(this, new TalentButtonEventArgs(Icon, Talent));
         }
 
         #endregion

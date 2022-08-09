@@ -1860,7 +1860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0ad3075f7ba0e4e8655164b5ed24a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TalentsView:
+  TalentButtons:
   - {fileID: 415156892}
   - {fileID: 154072890}
   - {fileID: 1314927956}
@@ -2092,8 +2092,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Menu:
-  - {fileID: 1142287633}
-  - {fileID: 451111594}
+  - {fileID: 1142287629}
+  - {fileID: 451111590}
 --- !u!1001 &1912542249
 PrefabInstance:
   m_ObjectHideFlags: 0

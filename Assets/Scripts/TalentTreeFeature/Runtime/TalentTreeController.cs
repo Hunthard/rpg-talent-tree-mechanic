@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,21 +17,17 @@ namespace Huntag.TalentTreeFeature
         private void Awake()
         {
             CreateTree();
+            Subscribe();
         }
 
-        private void OnEnable()
-        {
-            UpdateTalentTreeView();
-        }
+        private void OnDestroy()
+        { }
 
         #endregion
 
         #region Public Methods
 
-        public void UnlockTalent(Talent talent)
-        {
 
-        }
 
         #endregion
 
@@ -44,28 +41,51 @@ namespace Huntag.TalentTreeFeature
             for (int i = 1; i < talents.Capacity; i++)
             {
                 talents.Add(new Talent(i.ToString(), Talent.State.Unlocked, 0));
+                talents[i].AddLinkedTalents(talents[0]);
             }
 
+            talents[5].AddLinkedTalents(talents[4]);
+            talents[5].RemoveLinckedTalents(talents[0]);
+            talents[6].AddLinkedTalents(talents[4]);
+            talents[6].RemoveLinckedTalents(talents[0]);
             talents[7].AddLinkedTalents(talents[5], talents[6]);
+            talents[7].RemoveLinckedTalents(talents[0]);
             talents[3].AddLinkedTalents(talents[2]);
+            talents[3].RemoveLinckedTalents(talents[0]);
             talents[10].AddLinkedTalents(talents[8], talents[9]);
+            talents[10].RemoveLinckedTalents(talents[0]);
 
             Model = new TalentTreeModel(talents);
         }
 
-        private void UpdateTalentTreeView()
+        private void Subscribe()
         {
-            for (int i = 0; i < Model.Talents.Count; i++)
+            View.Enabled += UpdateView;
+
+            foreach (var button in View.TalentButtons)
             {
-                UpdateView(View.TalentsView[i], Model.Talents[i]);
+                AddButtonEventHandler(button);
             }
         }
 
-        private void UpdateView(TalentButton view, Talent talent)
-        {
-            view.Name.text = talent.Name;
+        private void Unsubscribe()
+        { }
 
-            view.Icon.color = talent.Status switch
+        private void UpdateView()
+        {
+            CheckTreeTalentsStatus();
+            
+            for (int i = 0; i < View.TalentButtons.Count; i++)
+            {
+                UpdateButtonView(View.TalentButtons[i], Model.Talents[i]);
+            }
+        }
+
+        private void UpdateButtonView(TalentButton button, Talent talent)
+        {
+            button.Name.text = talent.Name;
+
+            button.Icon.color = talent.Status switch
             {
                 Talent.State.Locked => _settings.Locked,
                 Talent.State.Unlocked => _settings.Unlocked,
@@ -73,12 +93,35 @@ namespace Huntag.TalentTreeFeature
                 _ => _settings.Locked,
             };
 
-            view.Clicked += View_Clicked;
+            button.Talent = talent;
         }
 
-        private void View_Clicked(object sender, System.EventArgs e)
+        private void CheckTreeTalentsStatus()
         {
-            throw new System.NotImplementedException();
+            foreach (var talent in Model.Talents)
+            {
+                talent.CheckStatus();
+            }
+        }
+
+        private void AddButtonEventHandler(TalentButton button)
+        {
+            button.Clicked += Proccess;
+        }
+
+        private void Proccess(object sender, TalentButton.TalentButtonEventArgs e)
+        {
+            var talent = e.Talent;
+
+            if (talent.Status == Talent.State.Locked) return;
+
+            if (talent.Status == Talent.State.Unlocked)
+            {
+                talent.Investigate();
+                e.Icon.color = _settings.Investigated;
+            }
+
+            UpdateView();
         }
 
         #endregion
