@@ -5,5 +5,5 @@ public class TalentViewCommonSettingsSO : ScriptableObject
 {
     public Color Locked;
     public Color Unlocked;
-    public Color Investigated;
+    public Color Explored;
 }

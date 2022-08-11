@@ -6,22 +6,26 @@ namespace Huntag.TalentTreeFeature
 {
     public class TalentTreeController : MonoBehaviour
     {
+        public TalentTreeView View;
+        public TalentTreeModel Model;
+
         [SerializeField]
         private TalentViewCommonSettingsSO _settings;
 
-        public TalentTreeView View;
-        public TalentTreeModel Model;
+        private Talent _selectedTalent;
 
         #region Unity Messages
 
         private void Awake()
         {
             CreateTree();
+            InitButtonViews();
             Subscribe();
         }
 
         private void OnEnable()
         {
+            ClearSelection();
             UpdateView();
         }
 
@@ -41,11 +45,11 @@ namespace Huntag.TalentTreeFeature
         private void CreateTree()
         {
             var talents = new List<Talent>(11);
-            talents.Add(new Talent(0, "Base", Talent.State.Investigated, 0));
+            talents.Add(new Talent(0, "Base", new ExploredTalentState(), 0));
 
             for (int i = 1; i < talents.Capacity; i++)
             {
-                talents.Add(new Talent(i, i.ToString(), Talent.State.Unlocked, (uint)i));
+                talents.Add(new Talent(i, i.ToString(), new UnlockedTalentState(), (uint)i));
                 talents[i].AddLinkedTalents(talents[0]);
             }
 
@@ -63,6 +67,15 @@ namespace Huntag.TalentTreeFeature
             Model = new TalentTreeModel(talents);
         }
 
+        private void InitButtonViews()
+        {
+            for (int i = 0; i < View.TalentButtons.Count; i++)
+            {
+                View.TalentButtons[i].Talent = Model.Talents[i];
+                View.TalentButtons[i].Name.text = Model.Talents[i].Name;
+            }
+        }
+
         private void Subscribe()
         {
             foreach (var button in View.TalentButtons)
@@ -74,10 +87,17 @@ namespace Huntag.TalentTreeFeature
         private void Unsubscribe()
         { }
 
+        private void ClearSelection()
+        {
+            _selectedTalent = null;
+            View.TalentName.text = string.Empty;
+            View.TalentDescription.text = string.Empty;
+        }
+
         private void UpdateView()
         {
-            CheckTreeTalentsStatus();
-            
+            //CheckTreeTalentsStatus();
+
             for (int i = 0; i < View.TalentButtons.Count; i++)
             {
                 UpdateButtonView(View.TalentButtons[i], Model.Talents[i]);
@@ -86,17 +106,20 @@ namespace Huntag.TalentTreeFeature
 
         private void UpdateButtonView(TalentButton button, Talent talent)
         {
-            button.Name.text = talent.Name;
-
-            button.Icon.color = talent.Status switch
+            switch (talent.State)
             {
-                Talent.State.Locked => _settings.Locked,
-                Talent.State.Unlocked => _settings.Unlocked,
-                Talent.State.Investigated => _settings.Investigated,
-                _ => _settings.Locked,
-            };
-
-            button.Talent = talent;
+                case LockedTalentState locked:
+                    button.Icon.color = _settings.Locked;
+                    break;
+                case UnlockedTalentState unlocked:
+                    button.Icon.color = _settings.Unlocked;
+                    break;
+                case ExploredTalentState explore:
+                    button.Icon.color = _settings.Explored;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void CheckTreeTalentsStatus()
@@ -109,22 +132,23 @@ namespace Huntag.TalentTreeFeature
 
         private void AddButtonEventHandler(TalentButton button)
         {
-            button.Clicked += Proccess;
+            button.Clicked += SelectTalent;
         }
 
-        private void Proccess(object sender, TalentButton.TalentButtonEventArgs e)
+        private void SelectTalent(object sender, TalentButton.TalentButtonEventArgs e)
         {
-            var talent = e.Talent;
+            _selectedTalent = e.Talent;
+            View.TalentName.text = _selectedTalent.Name;
+            View.TalentDescription.text = $"Cost: {_selectedTalent.Cost}";
+            //if (talent.State is LockedTalentState) return;
 
-            if (talent.Status == Talent.State.Locked) return;
+            //if (talent.State is UnlockedTalentState)
+            //{
+            //    talent.Explore();
+            //    e.Icon.color = _settings.Explored;
+            //}
 
-            if (talent.Status == Talent.State.Unlocked)
-            {
-                talent.Investigate();
-                e.Icon.color = _settings.Investigated;
-            }
-
-            UpdateView();
+            //UpdateView();
         }
 
         #endregion

@@ -15,17 +15,11 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
-        public enum State
-        {
-            Locked = 0,
-            Unlocked = 1,
-            Investigated = 2
-        }
-
         public int Id { get; private set; }
         public string Name { get; private set; }
         public uint Cost { get; private set; }
-        public State Status { get; private set; }
+
+        public ITalentState State { get; set; }
 
         private HashSet<Talent> _linkedTalents;
 
@@ -33,23 +27,29 @@ namespace Huntag.TalentTreeFeature
         {
             Id = -1;
             Name = "new talent";
-            Status = State.Locked;
+            State = new LockedTalentState();
             Cost = 0;
             _linkedTalents = new HashSet<Talent>();
         }
 
-        public Talent(int id, string name, State state, uint cost) : this()
+        public Talent(int id, string name, ITalentState state, uint cost) : this()
         {
             Id = id;
             Name = name;
-            Status = state;
+            State = state;
             Cost = cost;
         }
 
-        public Talent(int id, string name, State state, uint cost, params Talent[] talents) : this(id, name, state, cost)
+        public Talent(int id, string name, ITalentState state, uint cost, params Talent[] talents) : this(id, name, state, cost)
         {
             AddLinkedTalents(talents);
         }
+
+        public void Explore() => State.Explore(this);
+
+        public void Lock() => State.Lock(this);
+
+        public void Unlock() => State.Unlock(this);
 
         public void AddLinkedTalents(params Talent[] talents)
         {
@@ -69,25 +69,21 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
-        public void Lock() => Status = State.Locked;
-        public void Unlock() => Status = State.Unlocked;
-        public void Investigate() => Status = State.Investigated;
-
         public void CheckStatus()
         {
-            if (Status == State.Investigated) return;
+            //if (State is LockedTalentState) return;
             
-            var available = false;
+            //var available = false;
 
-            foreach (var talent in _linkedTalents)
-            {
-                available |= talent.Status == State.Investigated;
-            }
+            //foreach (var talent in _linkedTalents)
+            //{
+            //    available |= talent.State is ExploredTalentState;
+            //}
 
-            if (available)
-                Unlock();
-            else
-                Lock();
+            //if (available)
+            //    Unlock();
+            //else
+            //    Lock();
         }
     }
 }
