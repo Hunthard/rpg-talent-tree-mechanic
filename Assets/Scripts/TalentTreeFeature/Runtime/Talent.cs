@@ -27,7 +27,7 @@ namespace Huntag.TalentTreeFeature
         public uint Cost { get; private set; }
         public State Status { get; private set; }
 
-        private List<Talent> _linkedTalents;
+        private HashSet<Talent> _linkedTalents;
 
         public Talent()
         {
@@ -35,30 +35,28 @@ namespace Huntag.TalentTreeFeature
             Name = "new talent";
             Status = State.Locked;
             Cost = 0;
-            _linkedTalents = new List<Talent>();
+            _linkedTalents = new HashSet<Talent>();
         }
 
-        public Talent(string name, State state, uint cost) : this()
+        public Talent(int id, string name, State state, uint cost) : this()
         {
+            Id = id;
             Name = name;
             Status = state;
             Cost = cost;
         }
 
-        public Talent(string name, State state, uint cost, List<Talent> linkedTalents) : this(name, state, cost)
+        public Talent(int id, string name, State state, uint cost, params Talent[] talents) : this(id, name, state, cost)
         {
-            if (linkedTalents == null || linkedTalents.Contains(this))
-                return;
-
-            _linkedTalents = linkedTalents;
+            AddLinkedTalents(talents);
         }
 
         public void AddLinkedTalents(params Talent[] talents)
         {
             foreach (var talent in talents)
             {
-                if (_linkedTalents.Contains(talent)) continue;
-
+                if (talent.Equals(this)) continue;
+                
                 _linkedTalents.Add(talent);
             }
         }
