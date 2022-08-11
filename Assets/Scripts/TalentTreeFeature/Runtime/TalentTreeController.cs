@@ -167,6 +167,9 @@ namespace Huntag.TalentTreeFeature
             {
                 if (Model.Talents[i].State is LockedTalentState && Model.Talents[i].ExploredLinkedTalentCount() > 0)
                     Model.Talents[i].Unlock();
+
+                if (Model.Talents[i].State is UnlockedTalentState && Model.Talents[i].ExploredLinkedTalentCount() < 1)
+                    Model.Talents[i].Lock();
             }
         }
 
