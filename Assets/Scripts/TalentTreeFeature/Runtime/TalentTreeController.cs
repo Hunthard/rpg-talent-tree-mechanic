@@ -46,6 +46,8 @@ namespace Huntag.TalentTreeFeature
 
         public void ResetAbility()
         {
+            if (!_selectedTalent.IsRemovable()) return;
+            
             _selectedTalent.Unlock();
             UpdateView();
         }
@@ -80,9 +82,11 @@ namespace Huntag.TalentTreeFeature
             talents.Add(new Talent(9, "9", new LockedTalentState(), 2, talents[0]/*, talents[10]*/));
             talents.Add(new Talent(10, "10", new LockedTalentState(), 2, talents[8], talents[9]));
 
+            talents[0].AddLinkedTalents(talents[1], talents[2], talents[4], talents[8], talents[9]);
             talents[2].AddLinkedTalents(talents[3]);
             talents[2].AddLinkedTalents(talents[3]);
             talents[4].AddLinkedTalents(talents[5], talents[6]);
+            talents[5].AddLinkedTalents(talents[7]);
             talents[6].AddLinkedTalents(talents[7]);
             talents[8].AddLinkedTalents(talents[10]);
             talents[9].AddLinkedTalents(talents[10]);
@@ -161,7 +165,7 @@ namespace Huntag.TalentTreeFeature
         {
             for (int i = 1; i < Model.Talents.Count; i++)
             {
-                if (Model.Talents[i].State is LockedTalentState && Model.Talents[i].HasOneOrMoreExploredLinkedTalents())
+                if (Model.Talents[i].State is LockedTalentState && Model.Talents[i].ExploredLinkedTalentCount() > 0)
                     Model.Talents[i].Unlock();
             }
         }

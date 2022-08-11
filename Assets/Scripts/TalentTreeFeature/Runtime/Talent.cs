@@ -56,7 +56,7 @@ namespace Huntag.TalentTreeFeature
             foreach (var talent in talents)
             {
                 if (talent.Equals(this)) continue;
-                
+
                 _linkedTalents.Add(talent);
             }
         }
@@ -69,11 +69,46 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
-        public bool HasOneOrMoreExploredLinkedTalents()
+        public int ExploredLinkedTalentCount()
         {
+            var count = 0;
+
             foreach (var talent in _linkedTalents)
             {
-                if (talent.State is ExploredTalentState) return true;
+                if (talent.State is ExploredTalentState) count++;
+            }
+
+            return count;
+        }
+
+        public bool IsRemovable()
+        {
+            if (Id == 0) return false;
+            
+            return !IsCutout();
+        }
+
+        private bool IsCutout()
+        {
+            foreach (var childTalent in this._linkedTalents)
+            {
+                if (childTalent.Id == 0 || !(childTalent.State is ExploredTalentState)) continue;
+                
+                if (HasRootPath(this.Id, childTalent, this)) return false;
+            }
+
+            return true;
+        }
+
+        private bool HasRootPath(int startId, Talent current, Talent parent)
+        {
+            if (current.Id == 0) return true;
+
+            foreach (var child in current._linkedTalents)
+            {
+                if (child.Id == startId || child.Id == parent.Id) continue;
+
+                if (HasRootPath(startId, child, current)) return true;
             }
 
             return false;
