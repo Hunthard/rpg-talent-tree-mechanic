@@ -20,6 +20,11 @@ namespace Huntag.TalentTreeFeature
             Subscribe();
         }
 
+        private void OnEnable()
+        {
+            UpdateView();
+        }
+
         private void OnDestroy()
         { }
 
@@ -36,11 +41,11 @@ namespace Huntag.TalentTreeFeature
         private void CreateTree()
         {
             var talents = new List<Talent>(11);
-            talents.Add(new Talent("Base", Talent.State.Investigated, 0));
+            talents.Add(new Talent(0, "Base", Talent.State.Investigated, 0));
 
             for (int i = 1; i < talents.Capacity; i++)
             {
-                talents.Add(new Talent(i.ToString(), Talent.State.Unlocked, 0));
+                talents.Add(new Talent(i, i.ToString(), Talent.State.Unlocked, (uint)i));
                 talents[i].AddLinkedTalents(talents[0]);
             }
 
@@ -60,8 +65,6 @@ namespace Huntag.TalentTreeFeature
 
         private void Subscribe()
         {
-            View.Enabled += UpdateView;
-
             foreach (var button in View.TalentButtons)
             {
                 AddButtonEventHandler(button);
