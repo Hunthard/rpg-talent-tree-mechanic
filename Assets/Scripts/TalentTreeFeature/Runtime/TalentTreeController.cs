@@ -48,11 +48,6 @@ namespace Huntag.TalentTreeFeature
             UpdateView();
         }
 
-        public void AddSkillPoint()
-        {
-
-        }
-
         public void ResetAllAbilities()
         {
 
@@ -118,6 +113,12 @@ namespace Huntag.TalentTreeFeature
         {
             //CheckTreeTalentsStatus();
 
+            if (_selectedTalent != null)
+            {
+                View.Explore.gameObject.SetActive(!(_selectedTalent.State is ExploredTalentState));
+                View.Reset.gameObject.SetActive(!(_selectedTalent.State is UnlockedTalentState));
+            }
+
             for (int i = 0; i < View.TalentButtons.Count; i++)
             {
                 UpdateButtonView(View.TalentButtons[i], Model.Talents[i]);
@@ -160,6 +161,10 @@ namespace Huntag.TalentTreeFeature
             _selectedTalent = e.Talent;
             View.TalentName.text = _selectedTalent.Name;
             View.TalentDescription.text = $"Cost: {_selectedTalent.Cost}";
+
+            View.Explore.gameObject.SetActive(!(_selectedTalent.State is ExploredTalentState));
+            View.Reset.gameObject.SetActive(!(_selectedTalent.State is UnlockedTalentState));
+
             //if (talent.State is LockedTalentState) return;
 
             //if (talent.State is UnlockedTalentState)

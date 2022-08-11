@@ -2635,6 +2635,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TalentName: {fileID: 1979047922}
   TalentDescription: {fileID: 1447947698}
+  Explore: {fileID: 1368397442}
+  Reset: {fileID: 2117464843}
   TalentButtons:
   - {fileID: 649528398}
   - {fileID: 2045848007}
@@ -3692,7 +3694,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b410314e7679f8459c71a0f409d720f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillPoints: 0
 --- !u!4 &2004777305
 Transform:
   m_ObjectHideFlags: 0
@@ -4049,7 +4050,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -347}
+  m_AnchoredPosition: {x: 0, y: -273}
   m_SizeDelta: {x: 220, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2117464843
