@@ -36,7 +36,27 @@ namespace Huntag.TalentTreeFeature
 
         #region Public Methods
 
+        public void Explore()
+        {
+            _selectedTalent.Explore();
+            UpdateView();
+        }
 
+        public void ResetAbility()
+        {
+            _selectedTalent.Unlock();
+            UpdateView();
+        }
+
+        public void AddSkillPoint()
+        {
+
+        }
+
+        public void ResetAllAbilities()
+        {
+
+        }
 
         #endregion
 

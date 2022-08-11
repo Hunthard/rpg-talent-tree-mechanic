@@ -6,9 +6,13 @@ namespace Huntag.TalentTreeFeature
         { }
 
         public void Lock(Talent talent)
-        { }
+        {
+            talent.State = new LockedTalentState();
+        }
 
         public void Unlock(Talent talent)
-        { }
+        {
+            talent.State = new UnlockedTalentState();
+        }
     }
 }
