@@ -88,6 +88,11 @@ namespace Huntag.TalentTreeFeature
             return !IsCutout();
         }
 
+        public bool HasRootPath(int startId)
+        {
+            return HasRootPath(startId, this, this);
+        }
+
         private bool IsCutout()
         {
             foreach (var childTalent in this._linkedTalents)
@@ -106,7 +111,7 @@ namespace Huntag.TalentTreeFeature
 
             foreach (var child in current._linkedTalents)
             {
-                if (child.Id == startId || child.Id == parent.Id) continue;
+                if (child.Id == startId || child.Id == parent.Id || !(child.State is ExploredTalentState)) continue;
 
                 if (HasRootPath(startId, child, current)) return true;
             }

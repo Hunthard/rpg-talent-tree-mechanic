@@ -46,7 +46,7 @@ namespace Huntag.TalentTreeFeature
 
         public void ResetAbility()
         {
-            if (!_selectedTalent.IsRemovable()) return;
+            if (!Model.IsTreeValid(_selectedTalent.Id)) return;
             
             _selectedTalent.Unlock();
             UpdateView();
