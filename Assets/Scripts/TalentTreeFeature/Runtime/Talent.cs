@@ -69,28 +69,11 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
-        public void CheckStatus()
-        {
-            //if (State is LockedTalentState) return;
-
-            //var available = false;
-
-            //foreach (var talent in _linkedTalents)
-            //{
-            //    available |= talent.State is ExploredTalentState;
-            //}
-
-            //if (available)
-            //    Unlock();
-            //else
-            //    Lock();
-        }
-
-        public bool HasRootDirectAccess()
+        public bool HasOneOrMoreExploredLinkedTalents()
         {
             foreach (var talent in _linkedTalents)
             {
-                if (talent.Name.Equals("Base")) return true;
+                if (talent.State is ExploredTalentState) return true;
             }
 
             return false;
