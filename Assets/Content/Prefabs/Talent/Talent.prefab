@@ -15,17 +15,25 @@ PrefabInstance:
       propertyPath: m_text
       value: Talent
       objectReference: {fileID: 0}
+    - target: {fileID: 206794260044122695, guid: 7025e9fedcaf99a4dbd42455c49bf3f0, type: 3}
+      propertyPath: m_fontSize
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 206794260044122695, guid: 7025e9fedcaf99a4dbd42455c49bf3f0, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 28
+      objectReference: {fileID: 0}
     - target: {fileID: 6130759623780504519, guid: 7025e9fedcaf99a4dbd42455c49bf3f0, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6130759623780504519, guid: 7025e9fedcaf99a4dbd42455c49bf3f0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 150
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 6130759623780504519, guid: 7025e9fedcaf99a4dbd42455c49bf3f0, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 150
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 6130759623780504519, guid: 7025e9fedcaf99a4dbd42455c49bf3f0, type: 3}
       propertyPath: m_LocalPosition.x
