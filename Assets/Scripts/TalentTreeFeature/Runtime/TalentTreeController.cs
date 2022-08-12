@@ -38,15 +38,9 @@ namespace Huntag.TalentTreeFeature
 
         #endregion
 
-        #region Public Methods
-
-
-
-        #endregion
-
         #region Private Methods
 
-        // TODO: Only for testing purpose. Should create some Editor tool to create and edit talent tree.
+        // TODO: Only for testing purpose. Should create some Editor tool to edit talent tree.
         private TalentTreeModel GetTalentTree()
         {
             var talents = new List<Talent>(11);
@@ -163,38 +157,35 @@ namespace Huntag.TalentTreeFeature
         {
             UnlockAvailableTalents();
 
-            if (_selectedTalent != null)
-            {
-                View.Explore.gameObject.SetActive(_selectedTalent.State is UnlockedTalentState);
-                View.Reset.gameObject.SetActive(_selectedTalent.State is ExploredTalentState);
-            }
+            HandleTalentContols();
 
-            for (int i = 0; i < Model.Talents.Count; i++)
-            {
-                UpdateButtonView(View.TalentButtons[i], Model.Talents[i]);
-            }
+            UpdateButtonsView();
 
             View.PointsLeft.text = $"Points left: {_points}";
         }
 
-        private void UpdateButtonView(TalentButton button, Talent talent)
+        private void UpdateButtonsView()
         {
-            switch (talent.State)
+            for (int i = 0; i < Model.Talents.Count; i++)
             {
-                case LockedTalentState locked:
-                    button.Icon.color = _settings.Locked;
-                    break;
-                case UnlockedTalentState unlocked:
-                    button.Icon.color = _settings.Unlocked;
-                    break;
-                case ExploredTalentState explore:
-                    button.Icon.color = _settings.Explored;
-                    break;
-                default:
-                    break;
+                switch (Model.Talents[i].State)
+                {
+                    case LockedTalentState locked:
+                        View.TalentButtons[i].Icon.color = _settings.Locked;
+                        break;
+                    case UnlockedTalentState unlocked:
+                        View.TalentButtons[i].Icon.color = _settings.Unlocked;
+                        break;
+                    case ExploredTalentState explore:
+                        View.TalentButtons[i].Icon.color = _settings.Explored;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
+        // TODO: 
         private void UnlockAvailableTalents()
         {
             foreach (var talent in Model.Talents)
@@ -214,6 +205,13 @@ namespace Huntag.TalentTreeFeature
             _selectedTalent = e.Talent;
             View.TalentName.text = _selectedTalent.Name;
             View.TalentDescription.text = $"Cost: {_selectedTalent.Cost}";
+
+            HandleTalentContols();
+        }
+
+        private void HandleTalentContols()
+        {
+            if (_selectedTalent == null) return;
 
             View.Explore.gameObject.SetActive(_selectedTalent.State is UnlockedTalentState);
             View.Reset.gameObject.SetActive(_selectedTalent.State is ExploredTalentState);

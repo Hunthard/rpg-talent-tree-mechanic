@@ -16,6 +16,7 @@ namespace Huntag.TalentTreeFeature
             Talents = talents;
         }
 
+        // Check if there no disconnected node without removable
         public bool IsTreeValid(int removableID)
         {
             if (removableID == 0) return false;
