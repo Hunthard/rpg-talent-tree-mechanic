@@ -678,7 +678,7 @@ GameObject:
   - component: {fileID: 451111593}
   - component: {fileID: 451111592}
   m_Layer: 5
-  m_Name: Talent Tree Canvas
+  m_Name: Talent Tree Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1750,7 +1750,7 @@ GameObject:
   - component: {fileID: 1142287632}
   - component: {fileID: 1142287631}
   m_Layer: 5
-  m_Name: MainMenu Canvas
+  m_Name: MainMenu Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
