@@ -83,7 +83,7 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
-        public void Explore()
+        private void Explore()
         {
             if (_points < _selectedTalent.Cost) return;
 
@@ -93,7 +93,7 @@ namespace Huntag.TalentTreeFeature
             UpdateUI();
         }
 
-        public void ResetAbility()
+        private void ResetAbility()
         {
             if (!Model.IsTreeValid(_selectedTalent.Id)) return;
 
@@ -103,7 +103,7 @@ namespace Huntag.TalentTreeFeature
             UpdateUI();
         }
 
-        public void ResetAllAbilities()
+        private void ResetAllAbilities()
         {
             for (int i = 1; i < Model.Talents.Count; i++)
             {
@@ -116,7 +116,7 @@ namespace Huntag.TalentTreeFeature
             UpdateUI();
         }
 
-        public void AddPoint()
+        private void AddPoint()
         {
             _points++;
 
@@ -127,6 +127,7 @@ namespace Huntag.TalentTreeFeature
         {
             View.ExploreClicked += Explore;
             View.ResetClicked += ResetAbility;
+            View.ResetAllClicked += ResetAllAbilities;
             View.AddPointClicked += AddPoint;
 
             foreach (var button in View.TalentButtons)
@@ -139,6 +140,7 @@ namespace Huntag.TalentTreeFeature
         {
             View.ExploreClicked -= Explore;
             View.ResetClicked -= ResetAbility;
+            View.ResetAllClicked -= ResetAllAbilities;
             View.AddPointClicked -= AddPoint;
         }
 
