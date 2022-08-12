@@ -22,7 +22,7 @@ namespace Huntag.TalentTreeFeature
                 Talent = talent;
             }
         }
-        
+
         public event EventHandler<TalentButtonEventArgs> Clicked = delegate { };
 
         [SerializeField]
@@ -41,10 +41,6 @@ namespace Huntag.TalentTreeFeature
         {
             Clicked(this, new TalentButtonEventArgs(Icon, Talent));
         }
-
-        #endregion
-
-        #region Private Methods
 
         #endregion
     }

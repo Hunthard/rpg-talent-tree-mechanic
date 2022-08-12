@@ -19,7 +19,7 @@ namespace Huntag.TalentTreeFeature
         public bool IsTreeValid(int removableID)
         {
             if (removableID == 0) return false;
-            
+
             foreach (var exploredTalent in Talents)
             {
                 if (!(exploredTalent.State is ExploredTalentState)) continue;

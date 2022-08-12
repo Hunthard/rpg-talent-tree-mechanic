@@ -19,7 +19,8 @@ namespace Huntag.TalentTreeFeature
 
         private void Awake()
         {
-            CreateTree();
+            if (Model == null) Model = GetTalentTree();
+
             InitButtonViews();
             Subscribe();
         }
@@ -46,7 +47,7 @@ namespace Huntag.TalentTreeFeature
         #region Private Methods
 
         // TODO: Only for testing purpose. Should create some Editor tool to create and edit talent tree.
-        private void CreateTree()
+        private TalentTreeModel GetTalentTree()
         {
             var talents = new List<Talent>(11);
 
@@ -71,9 +72,10 @@ namespace Huntag.TalentTreeFeature
             talents[8].AddLinkedTalents(talents[10]);
             talents[9].AddLinkedTalents(talents[10]);
 
-            Model = new TalentTreeModel(talents);
+            return new TalentTreeModel(talents);
         }
 
+        // TODO: Add talent object reference to each button
         private void InitButtonViews()
         {
             for (int i = 0; i < View.TalentButtons.Count; i++)
@@ -89,8 +91,6 @@ namespace Huntag.TalentTreeFeature
 
             _points -= _selectedTalent.Cost;
             _selectedTalent.Explore();
-
-            UpdateUI();
         }
 
         private void ResetAbility()
@@ -99,29 +99,22 @@ namespace Huntag.TalentTreeFeature
 
             _points += _selectedTalent.Cost;
             _selectedTalent.Unlock();
-
-            UpdateUI();
         }
 
         private void ResetAllAbilities()
         {
-            for (int i = 1; i < Model.Talents.Count; i++)
+            foreach (var talent in Model.Talents)
             {
-                if (Model.Talents[i].State is ExploredTalentState)
-                    _points += Model.Talents[i].Cost;
+                if (talent.Id == 0) continue;
 
-                Model.Talents[i].Lock();
+                if (talent.State is ExploredTalentState)
+                    _points += talent.Cost;
+
+                talent.Lock();
             }
-
-            UpdateUI();
         }
 
-        private void AddPoint()
-        {
-            _points++;
-
-            UpdateUI();
-        }
+        private void AddPoint() => _points++;
 
         private void Subscribe()
         {
@@ -130,9 +123,14 @@ namespace Huntag.TalentTreeFeature
             View.ResetAllClicked += ResetAllAbilities;
             View.AddPointClicked += AddPoint;
 
+            View.ExploreClicked += UpdateUI;
+            View.ResetClicked += UpdateUI;
+            View.ResetAllClicked += UpdateUI;
+            View.AddPointClicked += UpdateUI;
+
             foreach (var button in View.TalentButtons)
             {
-                AddButtonEventHandler(button);
+                button.Clicked += SelectTalent;
             }
         }
 
@@ -142,6 +140,16 @@ namespace Huntag.TalentTreeFeature
             View.ResetClicked -= ResetAbility;
             View.ResetAllClicked -= ResetAllAbilities;
             View.AddPointClicked -= AddPoint;
+
+            View.ExploreClicked -= UpdateUI;
+            View.ResetClicked -= UpdateUI;
+            View.ResetAllClicked -= UpdateUI;
+            View.AddPointClicked -= UpdateUI;
+
+            foreach (var button in View.TalentButtons)
+            {
+                button.Clicked -= SelectTalent;
+            }
         }
 
         private void ClearSelection()
@@ -161,7 +169,7 @@ namespace Huntag.TalentTreeFeature
                 View.Reset.gameObject.SetActive(_selectedTalent.State is ExploredTalentState);
             }
 
-            for (int i = 0; i < View.TalentButtons.Count; i++)
+            for (int i = 0; i < Model.Talents.Count; i++)
             {
                 UpdateButtonView(View.TalentButtons[i], Model.Talents[i]);
             }
@@ -189,19 +197,16 @@ namespace Huntag.TalentTreeFeature
 
         private void UnlockAvailableTalents()
         {
-            for (int i = 1; i < Model.Talents.Count; i++)
+            foreach (var talent in Model.Talents)
             {
-                if (Model.Talents[i].State is LockedTalentState && Model.Talents[i].ExploredLinkedTalentCount() > 0)
-                    Model.Talents[i].Unlock();
+                if (talent.Id == 0) continue;
 
-                if (Model.Talents[i].State is UnlockedTalentState && Model.Talents[i].ExploredLinkedTalentCount() < 1)
-                    Model.Talents[i].Lock();
+                if (talent.State is LockedTalentState && talent.ExploredLinkedTalentCount() > 0)
+                    talent.Unlock();
+
+                if (talent.State is UnlockedTalentState && talent.ExploredLinkedTalentCount() < 1)
+                    talent.Lock();
             }
-        }
-
-        private void AddButtonEventHandler(TalentButton button)
-        {
-            button.Clicked += SelectTalent;
         }
 
         private void SelectTalent(object sender, TalentButton.TalentButtonEventArgs e)
