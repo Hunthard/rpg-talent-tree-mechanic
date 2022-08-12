@@ -10,6 +10,7 @@ namespace Huntag.TalentTreeFeature
     {
         public TMP_Text TalentName;
         public TMP_Text TalentDescription;
+        public TMP_Text PointsLeft;
 
         public Button Explore;
         public Button Reset;

@@ -12,9 +12,4 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private TalentTreeModel _talentTree;
-
-    public void AddSkillPoint()
-    {
-        SkillPoints++;
-    }
 }

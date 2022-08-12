@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +13,8 @@ namespace Huntag.TalentTreeFeature
 
         private Talent _selectedTalent;
 
+        private int _points = 0;
+
         #region Unity Messages
 
         private void Awake()
@@ -26,7 +27,7 @@ namespace Huntag.TalentTreeFeature
         private void OnEnable()
         {
             ClearSelection();
-            UpdateView();
+            UpdateUI();
         }
 
         private void OnDestroy()
@@ -38,34 +39,13 @@ namespace Huntag.TalentTreeFeature
 
         #region Public Methods
 
-        public void Explore()
-        {
-            _selectedTalent.Explore();
-            UpdateView();
-        }
 
-        public void ResetAbility()
-        {
-            if (!Model.IsTreeValid(_selectedTalent.Id)) return;
-            
-            _selectedTalent.Unlock();
-            UpdateView();
-        }
-
-        public void ResetAllAbilities()
-        {
-            for (int i = 1; i < Model.Talents.Count; i++)
-            {
-                Model.Talents[i].Lock();
-            }
-
-            UpdateView();
-        }
 
         #endregion
 
         #region Private Methods
 
+        // TODO: Only for testing purpose. Should create some Editor tool to create and edit talent tree.
         private void CreateTree()
         {
             var talents = new List<Talent>(11);
@@ -73,14 +53,14 @@ namespace Huntag.TalentTreeFeature
             talents.Add(new Talent(0, "Base", new ExploredTalentState(), 0));
             talents.Add(new Talent(1, "1", new LockedTalentState(), 1, talents[0]));
             talents.Add(new Talent(2, "2", new LockedTalentState(), 2, talents[0]/*, talents[3]*/));
-            talents.Add(new Talent(3, "3", new LockedTalentState(), 2, talents[2]));
-            talents.Add(new Talent(4, "4", new LockedTalentState(), 2, talents[0]/*, talents[5], talents[6]*/));
-            talents.Add(new Talent(5, "5", new LockedTalentState(), 2, talents[4]/*, talents[7]*/));
-            talents.Add(new Talent(6, "6", new LockedTalentState(), 2, talents[4]/*, talents[7]*/));
-            talents.Add(new Talent(7, "7", new LockedTalentState(), 2, talents[5], talents[6]));
-            talents.Add(new Talent(8, "8", new LockedTalentState(), 2, talents[0]/*, talents[10]*/));
-            talents.Add(new Talent(9, "9", new LockedTalentState(), 2, talents[0]/*, talents[10]*/));
-            talents.Add(new Talent(10, "10", new LockedTalentState(), 2, talents[8], talents[9]));
+            talents.Add(new Talent(3, "3", new LockedTalentState(), 3, talents[2]));
+            talents.Add(new Talent(4, "4", new LockedTalentState(), 4, talents[0]/*, talents[5], talents[6]*/));
+            talents.Add(new Talent(5, "5", new LockedTalentState(), 5, talents[4]/*, talents[7]*/));
+            talents.Add(new Talent(6, "6", new LockedTalentState(), 6, talents[4]/*, talents[7]*/));
+            talents.Add(new Talent(7, "7", new LockedTalentState(), 7, talents[5], talents[6]));
+            talents.Add(new Talent(8, "8", new LockedTalentState(), 8, talents[0]/*, talents[10]*/));
+            talents.Add(new Talent(9, "9", new LockedTalentState(), 9, talents[0]/*, talents[10]*/));
+            talents.Add(new Talent(10, "10", new LockedTalentState(), 10, talents[8], talents[9]));
 
             talents[0].AddLinkedTalents(talents[1], talents[2], talents[4], talents[8], talents[9]);
             talents[2].AddLinkedTalents(talents[3]);
@@ -103,10 +83,51 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
+        public void Explore()
+        {
+            if (_points < _selectedTalent.Cost) return;
+
+            _points -= _selectedTalent.Cost;
+            _selectedTalent.Explore();
+
+            UpdateUI();
+        }
+
+        public void ResetAbility()
+        {
+            if (!Model.IsTreeValid(_selectedTalent.Id)) return;
+
+            _points += _selectedTalent.Cost;
+            _selectedTalent.Unlock();
+
+            UpdateUI();
+        }
+
+        public void ResetAllAbilities()
+        {
+            for (int i = 1; i < Model.Talents.Count; i++)
+            {
+                if (Model.Talents[i].State is ExploredTalentState)
+                    _points += Model.Talents[i].Cost;
+
+                Model.Talents[i].Lock();
+            }
+
+            UpdateUI();
+        }
+
+        public void AddPoint()
+        {
+            _points++;
+
+            UpdateUI();
+        }
+
         private void Subscribe()
         {
             View.ExploreClicked += Explore;
             View.ResetClicked += ResetAbility;
+            View.AddPointClicked += AddPoint;
 
             foreach (var button in View.TalentButtons)
             {
@@ -118,6 +139,7 @@ namespace Huntag.TalentTreeFeature
         {
             View.ExploreClicked -= Explore;
             View.ResetClicked -= ResetAbility;
+            View.AddPointClicked -= AddPoint;
         }
 
         private void ClearSelection()
@@ -127,7 +149,7 @@ namespace Huntag.TalentTreeFeature
             View.TalentDescription.text = string.Empty;
         }
 
-        private void UpdateView()
+        private void UpdateUI()
         {
             UnlockAvailableTalents();
 
@@ -141,6 +163,8 @@ namespace Huntag.TalentTreeFeature
             {
                 UpdateButtonView(View.TalentButtons[i], Model.Talents[i]);
             }
+
+            View.PointsLeft.text = $"Points left: {_points}";
         }
 
         private void UpdateButtonView(TalentButton button, Talent talent)
@@ -186,16 +210,6 @@ namespace Huntag.TalentTreeFeature
 
             View.Explore.gameObject.SetActive(_selectedTalent.State is UnlockedTalentState);
             View.Reset.gameObject.SetActive(_selectedTalent.State is ExploredTalentState);
-
-            //if (talent.State is LockedTalentState) return;
-
-            //if (talent.State is UnlockedTalentState)
-            //{
-            //    talent.Explore();
-            //    e.Icon.color = _settings.Explored;
-            //}
-
-            //UpdateView();
         }
 
         #endregion
