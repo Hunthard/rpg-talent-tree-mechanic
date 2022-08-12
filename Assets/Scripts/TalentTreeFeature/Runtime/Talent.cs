@@ -5,16 +5,6 @@ namespace Huntag.TalentTreeFeature
 {
     public class Talent
     {
-        public class TalentEventArgs : EventArgs
-        {
-            public Talent talent;
-
-            public TalentEventArgs(Talent talent) : base()
-            {
-                this.talent = talent;
-            }
-        }
-
         public int Id { get; private set; }
         public string Name { get; private set; }
         public int Cost { get; private set; }
@@ -81,28 +71,9 @@ namespace Huntag.TalentTreeFeature
             return count;
         }
 
-        public bool IsRemovable()
-        {
-            if (Id == 0) return false;
-            
-            return !IsCutout();
-        }
-
         public bool HasRootPath(int startId)
         {
             return HasRootPath(startId, this, this);
-        }
-
-        private bool IsCutout()
-        {
-            foreach (var childTalent in this._linkedTalents)
-            {
-                if (childTalent.Id == 0 || !(childTalent.State is ExploredTalentState)) continue;
-                
-                if (HasRootPath(this.Id, childTalent, this)) return false;
-            }
-
-            return true;
         }
 
         private bool HasRootPath(int startId, Talent current, Talent parent)
