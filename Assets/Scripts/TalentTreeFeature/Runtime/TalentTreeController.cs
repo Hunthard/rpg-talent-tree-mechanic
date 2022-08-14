@@ -185,17 +185,17 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
-        // TODO: 
+        // TODO:
         private void UnlockAvailableTalents()
         {
             foreach (var talent in Model.Talents)
             {
                 if (talent.Id == 0) continue;
 
-                if (talent.State is LockedTalentState && talent.ExploredLinkedTalentCount() > 0)
+                if (talent.State is LockedTalentState && talent.HasExploredNeighbor())
                     talent.Unlock();
 
-                if (talent.State is UnlockedTalentState && talent.ExploredLinkedTalentCount() < 1)
+                if (talent.State is UnlockedTalentState && !talent.HasExploredNeighbor())
                     talent.Lock();
             }
         }

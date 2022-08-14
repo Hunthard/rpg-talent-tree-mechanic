@@ -58,16 +58,14 @@ namespace Huntag.TalentTreeFeature
             }
         }
 
-        public int ExploredLinkedTalentCount()
+        public bool HasExploredNeighbor()
         {
-            var count = 0;
-
             foreach (var talent in _linkedTalents)
             {
-                if (talent.State is ExploredTalentState) count++;
+                if (talent.State is ExploredTalentState) return true;
             }
 
-            return count;
+            return false;
         }
 
         public bool HasRootPath(int startId)
