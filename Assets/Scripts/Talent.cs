@@ -1,0 +1,2 @@
+public class Talent : Node
+{ }
