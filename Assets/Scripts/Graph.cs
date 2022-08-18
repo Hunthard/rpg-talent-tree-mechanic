@@ -30,19 +30,23 @@ public abstract class Graph<T> where T : Node
         Nodes.Add(node);
     }
 
-    public void AddLink(int from, int to)
+    public void AddLink(int idFrom, int idTo)
     {
-        _adjacencyMatrix[from].AddLast(to);
+        var fromIndex = Nodes.FindIndex(node => node.Id == idFrom);
+        var toIndex = Nodes.FindIndex(node => node.Id == idTo);
+
+        if (fromIndex == -1 || toIndex == -1) return;
+
+        _adjacencyMatrix[fromIndex].AddLast(toIndex);
     }
 
-
-    public void BFS(int nodeIndex, Predicate<Node> condition = null, Action<int> fallback = null)
+    public void BFS(int nodeId, Predicate<Node> condition = null, Action<int> fallback = null)
     {
         var explored = new bool[_size];
         var nodeQueue = new Queue<int>();
 
-        explored[nodeIndex] = true;
-        nodeQueue.Enqueue(nodeIndex);
+        explored[nodeId] = true;
+        nodeQueue.Enqueue(nodeId);
 
         while (nodeQueue.Count > 0)
         {

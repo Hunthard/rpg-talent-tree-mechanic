@@ -4,8 +4,13 @@ public class Node : IEquatable<Node>
 {
     public int Id { get; private set; }
 
-    public Node()
+    private Node()
     { }
+
+    public Node(int id) : this()
+    {
+        Id = id;
+    }
 
     public override bool Equals(object obj)
     {

@@ -10,7 +10,7 @@ public class TalentGraphController : MonoBehaviour
     [ContextMenu("Test")]
     public void Foo()
     {
-        GenerateGraph();
+        InitGraph();
         LogGraph();
     }
 
@@ -21,10 +21,24 @@ public class TalentGraphController : MonoBehaviour
         _graph.BFS(0, null, Print);
     }
 
-    private void GenerateGraph()
+    private void InitGraph()
     {
         _graph = new TalentGraph(11);
 
+        AddNodesToGraph();
+        AddLinksToGraph();
+    }
+
+    private void AddNodesToGraph()
+    {
+        for (int i = 0; i < 11; i++)
+        {
+            _graph.AddNode(new Talent(i));
+        }
+    }
+
+    private void AddLinksToGraph()
+    {
         _graph.AddLink(0, 1);
         _graph.AddLink(0, 4);
         _graph.AddLink(0, 2);
