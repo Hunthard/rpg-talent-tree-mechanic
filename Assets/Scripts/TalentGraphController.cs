@@ -16,13 +16,15 @@ public class TalentGraphController : MonoBehaviour
 
     private void Print(Node node) => Debug.Log(node.Id);
 
-    private bool IsRoot(Talent node) => _graph.IsRoot(node);
+    private bool IsRoot(Talent node) => _graph.IsRoot(node) || true;
 
     private void LogGraph()
     {
         Predicate<Talent> isRoot = IsRoot;
         
         _graph.BFS(100, isRoot, Print);
+        Debug.Log("");
+        _graph.DFS(100, isRoot, Print);
     }
 
     private void InitGraph()

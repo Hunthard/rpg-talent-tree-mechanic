@@ -72,6 +72,31 @@ public abstract class Graph<T> where T : Node
         }
     }
 
+    public void DFS(int nodeId, Predicate<T> condition = null, Action<T> fallback = null)
+    {
+        var explored = new bool[_size];
+        var nodeStack = new Stack<int>();
+
+        var nodeIndex = Nodes.FindIndex(node => node.Id == nodeId);
+
+        nodeStack.Push(nodeIndex);
+
+        while (nodeStack.Count > 0)
+        {
+            nodeIndex = nodeStack.Pop();
+
+            if (explored[nodeIndex]) continue;
+
+            if (condition(Nodes[nodeIndex])) fallback(Nodes[nodeIndex]);
+
+            explored[nodeIndex] = true;
+            foreach (var edge in _adjacencyMatrix[nodeIndex])
+            {
+                nodeStack.Push(edge);
+            }
+        }
+    }
+
     public bool IsRoot(T node)
     {
         var index = Nodes.IndexOf(node);
