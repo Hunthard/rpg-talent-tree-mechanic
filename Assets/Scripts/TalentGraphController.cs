@@ -14,11 +14,15 @@ public class TalentGraphController : MonoBehaviour
         LogGraph();
     }
 
-    private void Print(int index) => Debug.Log(index);
+    private void Print(Node node) => Debug.Log(node.Id);
+
+    private bool IsRoot(Talent node) => _graph.IsRoot(node);
 
     private void LogGraph()
     {
-        _graph.BFS(0, null, Print);
+        Predicate<Talent> isRoot = IsRoot;
+        
+        _graph.BFS(100, isRoot, Print);
     }
 
     private void InitGraph()
@@ -33,23 +37,23 @@ public class TalentGraphController : MonoBehaviour
     {
         for (int i = 0; i < 11; i++)
         {
-            _graph.AddNode(new Talent(i));
+            _graph.AddNode(new Talent(100 + i));
         }
     }
 
     private void AddLinksToGraph()
     {
-        _graph.AddLink(0, 1);
-        _graph.AddLink(0, 4);
-        _graph.AddLink(0, 2);
-        _graph.AddLink(0, 9);
-        _graph.AddLink(0, 8);
-        _graph.AddLink(4, 5);
-        _graph.AddLink(4, 6);
-        _graph.AddLink(5, 7);
-        _graph.AddLink(6, 7);
-        _graph.AddLink(2, 3);
-        _graph.AddLink(8, 10);
-        _graph.AddLink(9, 10);
+        _graph.AddLink(100 + 0, 100 + 1);
+        _graph.AddLink(100 + 0, 100 + 4);
+        _graph.AddLink(100 + 0, 100 + 2);
+        _graph.AddLink(100 + 0, 100 + 9);
+        _graph.AddLink(100 + 0, 100 + 8);
+        _graph.AddLink(100 + 4, 100 + 5);
+        _graph.AddLink(100 + 4, 100 + 6);
+        _graph.AddLink(100 + 5, 100 + 7);
+        _graph.AddLink(100 + 6, 100 + 7);
+        _graph.AddLink(100 + 2, 100 + 3);
+        _graph.AddLink(100 + 8, 100 + 10);
+        _graph.AddLink(100 + 9, 100 + 10);
     }
 }
